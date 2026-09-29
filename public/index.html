@@ -1,0 +1,2478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UrbanNexus - Mall & Home Utility Services Aggregator</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            },
+            mall: {
+              500: '#8b5cf6',
+              600: '#7c3aed',
+            },
+            home: {
+              500: '#10b981',
+              600: '#059669',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .cinema-seat {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px 6px 2px 2px;
+      transition: all 0.15s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col custom-scrollbar">
+
+  <!-- ================= TOP NOTIFICATION / PROMO BAR ================= -->
+  <div class="bg-gradient-to-r from-brand-900 via-indigo-950 to-purple-950 text-white text-xs py-2 px-4 shadow-sm border-b border-indigo-900/40">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-ping"></span> Live Unified Platform
+        </span>
+        <span class="text-slate-300 hidden sm:inline">|</span>
+        <span class="text-slate-200">Book Mall Parking & Dining or Schedule 45-min Emergency Home Utility Service.</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <div class="flex items-center gap-1.5 text-amber-300 font-medium">
+          <i data-lucide="tag" class="w-3.5 h-3.5"></i>
+          <span>Use code <strong>NEXUSNEW</strong> for $15 OFF</span>
+        </div>
+        <button onclick="resetData()" class="text-slate-400 hover:text-white transition flex items-center gap-1 text-[11px]">
+          <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset Demo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN HEADER / NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20 gap-4">
+        
+        <!-- Logo & Brand -->
+        <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('overview')">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 ring-2 ring-indigo-100">
+            <i data-lucide="layers" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-xl tracking-tight text-slate-900">Urban<span class="text-brand-600">Nexus</span></span>
+              <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 bg-indigo-100 text-brand-700 rounded-md">Omni-Hub</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium leading-none">Mall & Home Utility Services Aggregator</p>
+          </div>
+        </div>
+
+        <!-- Omnichannel Mall Selector -->
+        <div class="hidden md:flex items-center bg-slate-100/80 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700">
+          <div class="flex items-center gap-2 mr-3 border-r border-slate-300 pr-3">
+            <i data-lucide="map-pin" class="w-4 h-4 text-brand-600"></i>
+            <span class="font-semibold text-slate-500">Mall Hub:</span>
+          </div>
+          <select id="mallSelector" onchange="handleMallChange(this.value)" class="bg-transparent font-medium text-slate-900 focus:outline-none cursor-pointer pr-2">
+            <!-- Populated via JS -->
+          </select>
+          <div id="mallLiveIndicator" class="ml-2 flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span id="mallOccupancyLabel">74% Capacity</span>
+          </div>
+        </div>
+
+        <!-- Global Search Bar -->
+        <div class="hidden lg:flex flex-1 max-w-md mx-2">
+          <div class="relative w-full">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </div>
+            <input 
+              type="text" 
+              id="globalSearchInput" 
+              placeholder="Search stores, movies, AC repair, plumbing..." 
+              oninput="handleGlobalSearch(this.value)"
+              class="w-full pl-9 pr-8 py-2 bg-slate-100 hover:bg-slate-100/90 focus:bg-white text-xs rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 transition outline-none"
+            />
+            <button id="clearSearchBtn" onclick="clearGlobalSearch()" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Icons: Wallet & Bookings Badge -->
+        <div class="flex items-center gap-3">
+          <!-- NexusPoints Wallet Button -->
+          <button onclick="openWalletModal()" class="flex items-center gap-2 px-3 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-xl text-amber-900 transition text-xs font-semibold">
+            <div class="w-6 h-6 rounded-lg bg-amber-400 flex items-center justify-center text-amber-950 font-black text-xs">
+              <i data-lucide="coins" class="w-3.5 h-3.5"></i>
+            </div>
+            <div class="text-left hidden sm:block">
+              <div class="text-[10px] text-amber-700 leading-none">NexusWallet</div>
+              <div id="walletPointsDisplay" class="leading-tight">1,250 pts ($12.50)</div>
+            </div>
+          </button>
+
+          <!-- Active Bookings Button with Badge -->
+          <button onclick="switchTab('tracker')" class="relative flex items-center gap-2 px-3 py-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl text-brand-700 transition text-xs font-semibold">
+            <i data-lucide="calendar-check-2" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">Active Bookings</span>
+            <span id="activeBookingsBadge" class="w-5 h-5 flex items-center justify-center rounded-full bg-brand-600 text-white text-[10px] font-bold">
+              3
+            </span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex space-x-1 sm:space-x-4 border-t border-slate-100 overflow-x-auto py-2 custom-scrollbar text-xs font-semibold">
+        <button onclick="switchTab('overview')" id="tab-btn-overview" class="nav-tab-btn active px-3.5 py-2 rounded-lg transition flex items-center gap-2 text-brand-600 bg-brand-50 border border-brand-200/60 shadow-xs">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+          <span>Dual Hub Overview</span>
+        </button>
+
+        <button onclick="switchTab('mall')" id="tab-btn-mall" class="nav-tab-btn px-3.5 py-2 rounded-lg transition flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="shopping-bag" class="w-4 h-4 text-purple-600"></i>
+          <span>Mall Discovery & Services</span>
+        </button>
+
+        <button onclick="switchTab('home')" id="tab-btn-home" class="nav-tab-btn px-3.5 py-2 rounded-lg transition flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="wrench" class="w-4 h-4 text-emerald-600"></i>
+          <span>Home Utility Services</span>
+        </button>
+
+        <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-tab-btn px-3.5 py-2 rounded-lg transition flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="radar" class="w-4 h-4 text-blue-600"></i>
+          <span>Unified Live Tracker</span>
+          <span class="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold" id="trackerCountBadge">4</span>
+        </button>
+
+        <button onclick="switchTab('admin')" id="tab-btn-admin" class="nav-tab-btn px-3.5 py-2 rounded-lg transition flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <i data-lucide="sliders" class="w-4 h-4 text-amber-600"></i>
+          <span>Facility & Vendor Ops</span>
+        </button>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ================= SEARCH OVERLAY RESULTS (WHEN SEARCHING) ================= -->
+  <div id="searchResultsSection" class="hidden max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <i data-lucide="search" class="w-5 h-5 text-brand-600"></i>
+          <h2 class="text-base font-bold text-slate-900">Unified Search Results for: "<span id="searchKeywordLabel" class="text-brand-600"></span>"</h2>
+        </div>
+        <button onclick="clearGlobalSearch()" class="text-xs text-slate-500 hover:text-slate-800 font-medium">Close Search</button>
+      </div>
+      <div id="searchResultsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN CONTENT WRAPPER ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ============================================================= -->
+    <!-- TAB 1: DUAL HUB OVERVIEW -->
+    <!-- ============================================================= -->
+    <div id="tab-overview" class="space-y-8">
+      
+      <!-- HERO BANNER -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-brand-900 text-white p-6 sm:p-10 shadow-xl border border-indigo-800/40">
+        <!-- Background decorative glows -->
+        <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-purple-500/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute right-1/3 -bottom-20 w-80 h-80 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-indigo-200 border border-white/15 backdrop-blur-md mb-4">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
+            <span>The All-In-One Urban Lifestyle & Facility Gateway</span>
+          </div>
+          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+            Connect Your Shopping Mall Experience with Essential Home Utilities.
+          </h1>
+          <p class="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
+            Reserve smart parking bays, book IMAX tickets, order food court dining, and dispatch certified master electricians, plumbers, and deep cleaning technicians to your doorstep — all within one synchronized ecosystem.
+          </p>
+
+          <!-- Quick Action Shortcuts -->
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button onclick="switchTab('home')" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/25 transition flex items-center gap-2">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              <span>Book Emergency Home Service</span>
+            </button>
+            <button onclick="switchTab('mall'); filterMallSubTab('parking')" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-xs border border-white/20 backdrop-blur-md transition flex items-center gap-2">
+              <i data-lucide="car" class="w-4 h-4 text-purple-300"></i>
+              <span>Reserve Mall Parking Pass</span>
+            </button>
+            <button onclick="switchTab('mall'); filterMallSubTab('cinema')" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-xs border border-white/20 backdrop-blur-md transition flex items-center gap-2">
+              <i data-lucide="film" class="w-4 h-4 text-amber-300"></i>
+              <span>IMAX & 4DX Cinema Tickets</span>
+            </button>
+            <button onclick="switchTab('tracker')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-indigo-200 font-semibold text-xs border border-white/10 backdrop-blur-md transition flex items-center gap-2">
+              <i data-lucide="radar" class="w-4 h-4"></i>
+              <span>Live Dispatches Tracker</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Stats Floating Bar -->
+        <div class="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+          <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+            <div class="text-[11px] text-slate-400 font-medium">Partner Malls</div>
+            <div class="text-xl font-bold text-white mt-0.5">3 Mega Centers</div>
+            <div class="text-[10px] text-emerald-400 font-semibold mt-0.5">● 100% Live Ingress Sync</div>
+          </div>
+          <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+            <div class="text-[11px] text-slate-400 font-medium">Home Services Executed</div>
+            <div class="text-xl font-bold text-white mt-0.5" id="statCompletedServices">1,420+</div>
+            <div class="text-[10px] text-emerald-400 font-semibold mt-0.5">★ 4.88/5 Satisfaction</div>
+          </div>
+          <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+            <div class="text-[11px] text-slate-400 font-medium">Smart Parking Bays</div>
+            <div class="text-xl font-bold text-white mt-0.5" id="statParkingAvailable">573 Open</div>
+            <div class="text-[10px] text-purple-300 font-semibold mt-0.5">⚡ 76 Fast EV Chargers</div>
+          </div>
+          <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+            <div class="text-[11px] text-slate-400 font-medium">Emergency Dispatch SLA</div>
+            <div class="text-xl font-bold text-white mt-0.5">&lt; 45 Mins</div>
+            <div class="text-[10px] text-amber-300 font-semibold mt-0.5">⚡ Verified Pro Guarantee</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVE BOOKING SPOTLIGHT (IF ANY) -->
+      <div id="overviewActiveBookingBanner" class="bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-900 rounded-2xl p-5 border border-emerald-500/30 text-white shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 relative">
+            <i data-lucide="wrench" class="w-6 h-6"></i>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-ping"></span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 uppercase tracking-wide">
+                Live Active Dispatch
+              </span>
+              <span class="text-xs text-slate-400" id="spotlightBookingId">Booking #BK-8091</span>
+            </div>
+            <h4 class="text-sm font-bold text-white mt-0.5" id="spotlightBookingTitle">AC Deep Jet Foam Wash & Servicing</h4>
+            <p class="text-xs text-slate-300" id="spotlightBookingDetails">Technician David Vance is currently at your address. Status: Service in Progress (75%).</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+          <button onclick="advanceBookingStatus('BK-8091')" class="px-3 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i> Advance Demo Status
+          </button>
+          <button onclick="switchTab('tracker')" class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-xl border border-white/20 transition flex items-center gap-1.5">
+            <i data-lucide="external-link" class="w-4 h-4"></i> View Tracker
+          </button>
+        </div>
+      </div>
+
+      <!-- DUAL VALUE PROPOSITION / SPLIT GRID -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- MALL ECOSYSTEM CARD -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-xs hover:shadow-md transition">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+                <i data-lucide="store" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-slate-900">Mall Services & Amenities Hub</h3>
+                <p class="text-xs text-slate-500">Live store inventory, dining buzzers, and automated parking</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
+              3 Malls Active
+            </span>
+          </div>
+
+          <!-- Mall Feature Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+            <!-- Feature 1 -->
+            <div onclick="switchTab('mall'); filterMallSubTab('parking')" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-purple-50/50 border border-slate-200/80 hover:border-purple-200 transition cursor-pointer group">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-purple-100 group-hover:bg-purple-600 group-hover:text-white text-purple-700 flex items-center justify-center transition">
+                  <i data-lucide="car" class="w-4 h-4"></i>
+                </div>
+                <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Live Slots</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 mt-2">Smart Parking Ingress</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Pre-book B1/B2 bays and EV chargers with instant QR tickets.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div onclick="switchTab('mall'); filterMallSubTab('cinema')" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-purple-50/50 border border-slate-200/80 hover:border-purple-200 transition cursor-pointer group">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-amber-100 group-hover:bg-amber-500 group-hover:text-white text-amber-700 flex items-center justify-center transition">
+                  <i data-lucide="clapperboard" class="w-4 h-4"></i>
+                </div>
+                <span class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">IMAX 3D</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 mt-2">Multiplex Cinema Pass</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Select real-time recliners with snacks pre-ordered to your seat.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div onclick="switchTab('mall'); filterMallSubTab('food')" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-purple-50/50 border border-slate-200/80 hover:border-purple-200 transition cursor-pointer group">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-rose-100 group-hover:bg-rose-500 group-hover:text-white text-rose-700 flex items-center justify-center transition">
+                  <i data-lucide="utensils-crossed" class="w-4 h-4"></i>
+                </div>
+                <span class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md">Digital Buzzer</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 mt-2">Food Court Pre-Orders</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Skip line queues; receive digital buzzer token when order is ready.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div onclick="switchTab('mall'); filterMallSubTab('stores')" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-purple-50/50 border border-slate-200/80 hover:border-purple-200 transition cursor-pointer group">
+              <div class="flex items-center justify-between">
+                <div class="w-8 h-8 rounded-lg bg-blue-100 group-hover:bg-blue-600 group-hover:text-white text-blue-700 flex items-center justify-center transition">
+                  <i data-lucide="truck" class="w-4 h-4"></i>
+                </div>
+                <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">2-Hr Hyperlocal</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 mt-2">Mall-to-Home Delivery</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Order from Zara, Nike, Apple store; delivered to your door in 2 hours.</p>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-500 font-medium">Selected Mall: <strong id="overviewSelectedMallName">Phoenix Grand Galleria</strong></span>
+            <button onclick="switchTab('mall')" class="text-xs font-bold text-purple-700 hover:text-purple-900 flex items-center gap-1">
+              Explore All Mall Services <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- HOME UTILITY SERVICES CARD -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-xs hover:shadow-md transition">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <i data-lucide="home" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-slate-900">On-Demand Home Utilities</h3>
+                <p class="text-xs text-slate-500">Certified technicians, transparent pricing, and 30-90 day warranties</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Verified Pros
+            </span>
+          </div>
+
+          <!-- Home Utility Categories Preview -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5">
+            <!-- Cat 1: AC -->
+            <div onclick="openHomeServiceModal('srv-ac')" class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50/60 border border-slate-200/80 hover:border-emerald-200 transition cursor-pointer text-center group">
+              <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition">
+                <i data-lucide="wind" class="w-5 h-5"></i>
+              </div>
+              <div class="font-bold text-xs text-slate-900">AC Servicing</div>
+              <div class="text-[11px] text-emerald-600 font-semibold mt-0.5">From $49</div>
+            </div>
+
+            <!-- Cat 2: Electrician -->
+            <div onclick="openHomeServiceModal('srv-electrician')" class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50/60 border border-slate-200/80 hover:border-emerald-200 transition cursor-pointer text-center group">
+              <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition">
+                <i data-lucide="zap" class="w-5 h-5"></i>
+              </div>
+              <div class="font-bold text-xs text-slate-900">Electrician</div>
+              <div class="text-[11px] text-emerald-600 font-semibold mt-0.5">From $35</div>
+            </div>
+
+            <!-- Cat 3: Plumbing -->
+            <div onclick="openHomeServiceModal('srv-plumbing')" class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50/60 border border-slate-200/80 hover:border-emerald-200 transition cursor-pointer text-center group">
+              <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition">
+                <i data-lucide="droplets" class="w-5 h-5"></i>
+              </div>
+              <div class="font-bold text-xs text-slate-900">Plumbing & Leaks</div>
+              <div class="text-[11px] text-emerald-600 font-semibold mt-0.5">From $39</div>
+            </div>
+
+            <!-- Cat 4: Deep Cleaning -->
+            <div onclick="openHomeServiceModal('srv-cleaning')" class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50/60 border border-slate-200/80 hover:border-emerald-200 transition cursor-pointer text-center group">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+              </div>
+              <div class="font-bold text-xs text-slate-900">Deep Cleaning</div>
+              <div class="text-[11px] text-emerald-600 font-semibold mt-0.5">From $89</div>
+            </div>
+
+            <!-- Cat 5: Appliances -->
+            <div onclick="openHomeServiceModal('srv-appliances')" class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50/60 border border-slate-200/80 hover:border-emerald-200 transition cursor-pointer text-center group">
+              <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition">
+                <i data-lucide="wrench" class="w-5 h-5"></i>
+              </div>
+              <div class="font-bold text-xs text-slate-900">Appliance Fix</div>
+              <div class="text-[11px] text-emerald-600 font-semibold mt-0.5">From $45</div>
+            </div>
+
+            <!-- Cat 6: Pest Control -->
+            <div onclick="openHomeServiceModal('srv-pest')" class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50/60 border border-slate-200/80 hover:border-emerald-200 transition cursor-pointer text-center group">
+              <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+              </div>
+              <div class="font-bold text-xs text-slate-900">Pest Defense</div>
+              <div class="text-[11px] text-emerald-600 font-semibold mt-0.5">From $55</div>
+            </div>
+          </div>
+
+          <!-- Trust Badges Bar -->
+          <div class="mt-5 p-3 rounded-xl bg-emerald-50/70 border border-emerald-200/70 flex items-center justify-between text-xs text-emerald-900">
+            <div class="flex items-center gap-1.5 font-medium">
+              <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i>
+              <span>Police-Verified Pros & $10k Damage Cover</span>
+            </div>
+            <button onclick="switchTab('home')" class="font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1">
+              View Catalog <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PROMOTIONS & VOUCHERS CAROUSEL -->
+      <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 rounded-2xl p-6 border border-amber-200/80 shadow-xs">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-amber-400 text-amber-950 flex items-center justify-center font-bold">
+              <i data-lucide="gift" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 text-sm">Aggregator Exclusive Perks & Coupons</h4>
+              <p class="text-xs text-slate-500">Cross-platform benefits: earn points at mall retailers and redeem for home maintenance!</p>
+            </div>
+          </div>
+          <button onclick="openWalletModal()" class="text-xs font-bold text-amber-800 hover:text-amber-950 underline">View Loyalty Wallet</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="overviewPromosGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- TAB 2: MALL DISCOVERY & SERVICES -->
+    <!-- ============================================================= -->
+    <div id="tab-mall" class="hidden space-y-6">
+      
+      <!-- Mall Details Header Card -->
+      <div id="mallHeroCard" class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+        <div class="relative h-48 sm:h-64 bg-slate-900">
+          <img id="mallBannerImage" src="" alt="Mall Banner" class="w-full h-full object-cover opacity-60">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+          
+          <div class="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 text-white flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span id="mallCityTag" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-md text-white border border-white/20">Metro Central</span>
+                <span class="flex items-center gap-1 text-xs text-amber-300 font-bold">
+                  <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                  <span id="mallRatingLabel">4.8 (14.2k reviews)</span>
+                </span>
+              </div>
+              <h2 id="mallNameTitle" class="text-2xl sm:text-3xl font-extrabold text-white">Phoenix Grand Galleria</h2>
+              <p id="mallAddressLabel" class="text-xs text-slate-300 flex items-center gap-1 mt-1">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-400"></i>
+                <span>108 Outer Ring Road, Central Business District</span>
+              </p>
+            </div>
+
+            <!-- Mall Ingress Status Badges -->
+            <div class="flex items-center gap-3">
+              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/20 text-center min-w-[100px]">
+                <div class="text-[10px] text-slate-300">Mall Hours</div>
+                <div id="mallTimingsLabel" class="text-xs font-bold text-white">10 AM - 11:30 PM</div>
+              </div>
+              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/20 text-center min-w-[100px]">
+                <div class="text-[10px] text-slate-300">Live Parking</div>
+                <div id="mallParkingStatsBadge" class="text-xs font-bold text-emerald-300">198 Open Bays</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mall Sub-Navigation Tabs -->
+        <div class="flex border-t border-slate-100 bg-white px-4 sm:px-6 py-2 overflow-x-auto gap-2 text-xs font-semibold custom-scrollbar">
+          <button onclick="filterMallSubTab('stores')" id="subtab-btn-stores" class="subtab-btn active px-3.5 py-2 rounded-xl text-brand-700 bg-brand-50 border border-brand-200/70 transition flex items-center gap-1.5">
+            <i data-lucide="shopping-bag" class="w-4 h-4"></i> Stores & Catalog (Delivery Ready)
+          </button>
+          <button onclick="filterMallSubTab('parking')" id="subtab-btn-parking" class="subtab-btn px-3.5 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-1.5">
+            <i data-lucide="car" class="w-4 h-4"></i> Smart Parking & EV Bays
+          </button>
+          <button onclick="filterMallSubTab('cinema')" id="subtab-btn-cinema" class="subtab-btn px-3.5 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-1.5">
+            <i data-lucide="film" class="w-4 h-4"></i> Multiplex Cinema & Seats
+          </button>
+          <button onclick="filterMallSubTab('food')" id="subtab-btn-food" class="subtab-btn px-3.5 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-1.5">
+            <i data-lucide="utensils" class="w-4 h-4"></i> Food Court Digital Pre-Orders
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= SUB-PANEL: STORES ================= -->
+      <div id="mallSubPanel-stores" class="space-y-4">
+        <!-- Store category filter & info bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200">
+          <div class="flex items-center gap-2 overflow-x-auto custom-scrollbar">
+            <button onclick="filterStoreCategory('All')" class="store-filter-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white">All Stores</button>
+            <button onclick="filterStoreCategory('Fashion')" class="store-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Fashion</button>
+            <button onclick="filterStoreCategory('Electronics')" class="store-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Electronics</button>
+            <button onclick="filterStoreCategory('Beauty')" class="store-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Beauty & Wellness</button>
+            <button onclick="filterStoreCategory('Sports')" class="store-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Sports</button>
+          </div>
+          <div class="text-xs text-slate-500 font-medium">
+            <span class="text-emerald-600 font-bold">⚡ Mall-to-Home Delivery</span> enabled for all verified stores.
+          </div>
+        </div>
+
+        <!-- Stores Grid -->
+        <div id="storesListGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- ================= SUB-PANEL: PARKING ================= -->
+      <div id="mallSubPanel-parking" class="hidden space-y-6">
+        <!-- Parking Banner -->
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white border border-indigo-800/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mb-3">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+              <span>Automated ANPR License Plate Ingress</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold text-white">Smart Mall Parking & EV Fast-Charging</h3>
+            <p class="text-xs text-slate-300 mt-1 max-w-xl">
+              Reserve your slot in advance. Enter seamlessly with your registered vehicle number plate or digital QR ticket. Free cancellation up to 15 mins prior.
+            </p>
+          </div>
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-center min-w-[200px]">
+            <div class="text-xs text-slate-300">Total Mall Capacity</div>
+            <div class="text-2xl font-black text-white mt-1" id="parkingCapacityValue">650 Slots</div>
+            <div class="text-[11px] text-emerald-400 font-semibold mt-1">● 198 Slots Available Now</div>
+          </div>
+        </div>
+
+        <!-- Parking Zones Grid -->
+        <div id="parkingZonesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- ================= SUB-PANEL: CINEMA ================= -->
+      <div id="mallSubPanel-cinema" class="hidden space-y-6">
+        <div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200">
+          <div>
+            <h3 class="font-bold text-base text-slate-900">Now Showing at Multiplex</h3>
+            <p class="text-xs text-slate-500">Select seats, choose IMAX / 4DX formats, and enjoy contactless e-entry.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800">Dolby Atmos & Laser 4K</span>
+          </div>
+        </div>
+
+        <div id="moviesListGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- ================= SUB-PANEL: FOOD COURT ================= -->
+      <div id="mallSubPanel-food" class="hidden space-y-6">
+        <div class="bg-gradient-to-r from-rose-900 via-orange-950 to-slate-900 rounded-3xl p-6 text-white border border-rose-800/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/40">
+              Zero Queue Wait
+            </span>
+            <h3 class="text-xl font-bold text-white mt-2">Food Court Digital Buzzer Pre-Orders</h3>
+            <p class="text-xs text-slate-300 mt-1">Order your food while shopping. Get notified on your screen when your order is ready for pickup at the counter.</p>
+          </div>
+          <div class="bg-white/10 rounded-2xl p-3 border border-white/20 text-center min-w-[160px]">
+            <div class="text-[11px] text-slate-300">Average Prep Time</div>
+            <div class="text-xl font-extrabold text-white mt-0.5">10-15 Mins</div>
+          </div>
+        </div>
+
+        <div id="foodOutletsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- TAB 3: HOME UTILITY SERVICES -->
+    <!-- ============================================================= -->
+    <div id="tab-home" class="hidden space-y-6">
+      
+      <!-- Rapid Dispatch Emergency Banner -->
+      <div class="bg-gradient-to-br from-emerald-950 via-slate-900 to-teal-950 rounded-3xl p-6 sm:p-8 text-white border border-emerald-500/30 shadow-lg relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mb-3">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span>45-Min Emergency Guarantee</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Certified Master Technicians For Every Household Need.
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+              From power tripping & burst pipes to AC foam jet cleaning and deep sanitization — guaranteed transparent quotes, background-checked professionals, and comprehensive 30 to 90-day warranties.
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <button onclick="openHomeServiceModal('srv-electrician', true)" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              <span>Emergency Power Repair</span>
+            </button>
+            <button onclick="openHomeServiceModal('srv-plumbing', true)" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+              <i data-lucide="droplets" class="w-4 h-4"></i>
+              <span>Emergency Water Leak Fix</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Safety Pillars -->
+        <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+              <i data-lucide="user-check" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="font-bold text-white">100% Police Verified</div>
+              <div class="text-[11px] text-slate-400">Strict background & credential vetting</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="font-bold text-white">30 - 90 Days Warranty</div>
+              <div class="text-[11px] text-slate-400">Free re-visit if issue recurs</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+              <i data-lucide="receipt" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="font-bold text-white">Upfront Fixed Rate Card</div>
+              <div class="text-[11px] text-slate-400">No hidden surge charges or extras</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Categories Filter Bar -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar">
+        <button onclick="filterHomeCategory('All')" class="home-cat-btn active px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs">All Services</button>
+        <button onclick="filterHomeCategory('AC')" class="home-cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">AC & Cooling</button>
+        <button onclick="filterHomeCategory('Electrical')" class="home-cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">Electrical</button>
+        <button onclick="filterHomeCategory('Plumbing')" class="home-cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">Plumbing</button>
+        <button onclick="filterHomeCategory('Cleaning')" class="home-cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">Deep Cleaning</button>
+        <button onclick="filterHomeCategory('Appliance')" class="home-cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">Appliances</button>
+        <button onclick="filterHomeCategory('Pest')" class="home-cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">Pest Defense</button>
+        <button onclick="filterHomeCategory('Carpentry')" class="home-cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">Carpentry</button>
+      </div>
+
+      <!-- Home Services Catalog Grid -->
+      <div id="homeServicesListGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Verified Technicians Showcase -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-xs">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-bold text-base text-slate-900">Featured Certified Master Technicians</h3>
+            <p class="text-xs text-slate-500">Live on-duty technicians available for direct dispatch in your area.</p>
+          </div>
+          <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+            ● 18 Pros Active
+          </span>
+        </div>
+
+        <div id="techniciansGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- TAB 4: UNIFIED LIVE TRACKER -->
+    <!-- ============================================================= -->
+    <div id="tab-tracker" class="hidden space-y-6">
+      
+      <!-- Tracker Header Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
+        <div>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+              <i data-lucide="radar" class="w-4 h-4"></i>
+            </div>
+            <h2 class="text-lg font-bold text-slate-900">Unified Activity & Live Dispatch Tracker</h2>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">Real-time status updates across home repairs, mall parking passes, cinema tickets, and delivery couriers.</p>
+        </div>
+
+        <!-- Filter tabs for tracker -->
+        <div class="flex items-center gap-1.5 overflow-x-auto">
+          <button onclick="filterTrackerType('all')" class="tracker-filter-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white">All Bookings</button>
+          <button onclick="filterTrackerType('home_service')" class="tracker-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Home Utilities</button>
+          <button onclick="filterTrackerType('mall_parking')" class="tracker-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Parking Passes</button>
+          <button onclick="filterTrackerType('cinema_ticket')" class="tracker-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Cinema</button>
+          <button onclick="filterTrackerType('mall_to_home_delivery')" class="tracker-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Mall Deliveries</button>
+        </div>
+      </div>
+
+      <!-- Live Simulated Dispatch Map Banner (For en-route services) -->
+      <div class="bg-slate-900 rounded-3xl border border-slate-800 p-6 text-white shadow-md relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+            <div>
+              <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Live Hyperlocal Telemetry Simulator</div>
+              <div class="text-sm font-semibold text-white">Technician David Vance & Delivery Fleet in Central District</div>
+            </div>
+          </div>
+          <div class="text-xs text-slate-400 flex items-center gap-2">
+            <span>GPS Frequency: <strong>1.2s</strong></span>
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">LAT: 12.9716° N, LON: 77.5946° E</span>
+          </div>
+        </div>
+
+        <!-- Simulated Map Graphic -->
+        <div class="h-32 sm:h-40 bg-slate-950 rounded-2xl border border-slate-800 relative flex items-center justify-center overflow-hidden">
+          <!-- Background grid -->
+          <div class="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:16px_16px] opacity-40"></div>
+          
+          <!-- Mall Node -->
+          <div class="absolute left-1/4 top-1/2 -translate-y-1/2 -translate-x-1/2 text-center">
+            <div class="w-10 h-10 rounded-2xl bg-purple-600/30 border border-purple-400 text-purple-300 flex items-center justify-center mx-auto shadow-lg shadow-purple-500/20">
+              <i data-lucide="building-2" class="w-5 h-5"></i>
+            </div>
+            <div class="text-[11px] font-bold text-slate-300 mt-1">Phoenix Galleria</div>
+          </div>
+
+          <!-- Connecting animated vector line -->
+          <div class="w-1/3 h-0.5 border-t-2 border-dashed border-indigo-500/60 relative">
+            <div class="absolute top-1/2 -translate-y-1/2 left-1/2 w-4 h-4 rounded-full bg-emerald-400 border-2 border-slate-900 shadow-md animate-pulse"></div>
+          </div>
+
+          <!-- Residence Node -->
+          <div class="absolute right-1/4 top-1/2 -translate-y-1/2 translate-x-1/2 text-center">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-600/30 border border-emerald-400 text-emerald-300 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
+              <i data-lucide="home" class="w-5 h-5"></i>
+            </div>
+            <div class="text-[11px] font-bold text-slate-300 mt-1">Skyline Residences</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bookings Cards Container -->
+      <div id="bookingsListContainer" class="space-y-4">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- TAB 5: FACILITY & VENDOR OPERATIONS -->
+    <!-- ============================================================= -->
+    <div id="tab-admin" class="hidden space-y-6">
+      
+      <!-- Operations Overview Header -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+              <i data-lucide="sliders" class="w-4 h-4"></i>
+            </div>
+            <h2 class="text-lg font-bold text-slate-900">Facility Operations & Technician Dispatch Portal</h2>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">Monitor mall parking loads, reassign field technicians, and review live service SLAs.</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="resetData()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition flex items-center gap-1.5">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Demo Data
+          </button>
+        </div>
+      </div>
+
+      <!-- Operational KPIs -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Service Dispatches</div>
+          <div class="text-2xl font-black text-slate-900 mt-1" id="adminActiveDispatches">4 Live</div>
+          <div class="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+            <i data-lucide="arrow-up-right" class="w-3 h-3"></i> 99.2% SLA On-Time
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Mall Parking Utilization</div>
+          <div class="text-2xl font-black text-slate-900 mt-1" id="adminParkingUtil">71% Occupied</div>
+          <div class="text-xs text-purple-600 font-semibold mt-1 flex items-center gap-1">
+            <i data-lucide="activity" class="w-3 h-3"></i> Optimal Traffic Flow
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Verified Technicians</div>
+          <div class="text-2xl font-black text-slate-900 mt-1">18 On Duty</div>
+          <div class="text-xs text-blue-600 font-semibold mt-1 flex items-center gap-1">
+            <i data-lucide="check" class="w-3 h-3"></i> 5 Diamond Specialists
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Aggregator CSAT Score</div>
+          <div class="text-2xl font-black text-slate-900 mt-1">4.88 / 5.0</div>
+          <div class="text-xs text-amber-600 font-semibold mt-1 flex items-center gap-1">
+            <i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> Over 28,000+ Ratings
+          </div>
+        </div>
+      </div>
+
+      <!-- Dispatch Queue Table & Parking Slot Controls -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Live Request Manager -->
+        <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 shadow-xs">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-base text-slate-900">Live Service Tickets & Status Advancement</h3>
+            <span class="text-xs text-slate-500">Test transitions in real-time</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+                <tr>
+                  <th class="py-2.5 px-3">Ticket ID</th>
+                  <th class="py-2.5 px-3">Type</th>
+                  <th class="py-2.5 px-3">Customer / Detail</th>
+                  <th class="py-2.5 px-3">Status</th>
+                  <th class="py-2.5 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminTicketsTableBody" class="divide-y divide-slate-100">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Parking Zone Dynamic Control -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs space-y-4">
+          <h3 class="font-bold text-base text-slate-900">Mall Parking Gate Control</h3>
+          <p class="text-xs text-slate-500">Facility managers can manually toggle slot availability or simulate parking rushes.</p>
+
+          <div id="adminParkingControls" class="space-y-3">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-slate-900 text-slate-400 text-xs border-t border-slate-800 mt-12 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+        </div>
+        <span class="font-bold text-slate-200">UrbanNexus</span> — Mall & Home Utility Services Aggregator Architecture
+      </div>
+      <div class="flex items-center gap-6 text-slate-400">
+        <span>Dual-Hub Protocol</span>
+        <span>•</span>
+        <span>ANPR Parking Sync</span>
+        <span>•</span>
+        <span>Verified Technician Guarantee</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. HOME SERVICE BOOKING MODAL -->
+  <div id="homeServiceModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-150">
+      <button onclick="closeModal('homeServiceModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div id="hsmIconBox" class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+          <i data-lucide="wrench" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span id="hsmBadge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">Verified</span>
+          <h3 id="hsmTitle" class="text-base font-extrabold text-slate-900 mt-0.5">AC Deep Jet Foam Wash</h3>
+        </div>
+      </div>
+
+      <p id="hsmDesc" class="text-xs text-slate-600 leading-relaxed mb-4">
+        Thorough 360-degree high-pressure cleaning and diagnostic test.
+      </p>
+
+      <form id="homeServiceForm" onsubmit="submitHomeServiceBooking(event)" class="space-y-4">
+        <input type="hidden" id="hsmServiceId" value="" />
+
+        <!-- Pricing Tier Selection -->
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1.5">Select Service Package</label>
+          <div id="hsmTiersContainer" class="space-y-2">
+            <!-- Tiers populated via JS -->
+          </div>
+        </div>
+
+        <!-- Emergency Urgent Dispatch Toggle -->
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
+            <div>
+              <div class="text-xs font-bold text-amber-900">Urgent Emergency Dispatch?</div>
+              <div class="text-[10px] text-amber-700">Technician dispatched immediately (within 45m).</div>
+            </div>
+          </div>
+          <input type="checkbox" id="hsmUrgentToggle" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer">
+        </div>
+
+        <!-- Scheduled Slot -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Date</label>
+            <select id="hsmDate" class="w-full text-xs p-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-brand-500">
+              <option value="Today">Today (Immediate / Standard)</option>
+              <option value="Tomorrow">Tomorrow</option>
+              <option value="Day After">Day After</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Time Slot</label>
+            <select id="hsmTime" class="w-full text-xs p-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-brand-500">
+              <option value="09:00 AM - 11:00 AM">09:00 AM - 11:00 AM</option>
+              <option value="12:00 PM - 02:00 PM">12:00 PM - 02:00 PM</option>
+              <option value="03:00 PM - 05:00 PM" selected>03:00 PM - 05:00 PM</option>
+              <option value="06:00 PM - 08:00 PM">06:00 PM - 08:00 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Customer Address -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Service Address</label>
+          <input type="text" id="hsmAddress" required value="Flat 402, Tower Emerald, Horizon Heights" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-brand-500" placeholder="Apartment / Villa, Street, Landmark">
+        </div>
+
+        <!-- Promo Code Input -->
+        <div class="flex items-center gap-2">
+          <input type="text" id="hsmPromoCode" placeholder="Promo code (e.g. NEXUSNEW)" class="flex-1 text-xs p-2 rounded-xl border border-slate-200 uppercase">
+          <button type="button" onclick="applyServicePromo()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 font-bold text-xs rounded-xl text-slate-700">Apply</button>
+        </div>
+        <div id="hsmPromoFeedback" class="text-[11px] font-semibold hidden"></div>
+
+        <!-- Summary & Submit -->
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Total Estimated Price</div>
+            <div class="text-xl font-extrabold text-slate-900" id="hsmFinalPriceDisplay">$49.00</div>
+          </div>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/25 transition">
+            Confirm & Assign Pro
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. PARKING RESERVATION MODAL -->
+  <div id="parkingModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-150">
+      <button onclick="closeModal('parkingModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center">
+          <i data-lucide="car" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-100 text-purple-800">Smart Ingress</span>
+          <h3 id="parkModalZoneName" class="text-base font-extrabold text-slate-900 mt-0.5">Basement B1 - Express / VIP</h3>
+        </div>
+      </div>
+
+      <form onsubmit="submitParkingReservation(event)" class="space-y-4">
+        <input type="hidden" id="parkModalZoneId" value="">
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Vehicle License Plate Number</label>
+          <input type="text" id="parkModalVehicleNumber" required value="KA-05-EV-9922" placeholder="e.g. KA-05-EV-9922" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 uppercase tracking-wider font-mono focus:bg-white focus:outline-none focus:border-brand-500">
+          <p class="text-[10px] text-slate-400 mt-1">Our ANPR cameras will recognize your vehicle and lift the boom barrier automatically.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Expected Duration</label>
+            <select id="parkModalDuration" onchange="calculateParkingModalPrice()" class="w-full text-xs p-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-brand-500">
+              <option value="2">2 Hours</option>
+              <option value="3" selected>3 Hours</option>
+              <option value="4">4 Hours</option>
+              <option value="6">6 Hours</option>
+              <option value="8">Full Day (8 Hours)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Rate per Hour</label>
+            <div id="parkModalRateDisplay" class="text-xs p-2 rounded-xl border border-slate-200 bg-slate-100 font-bold text-slate-700">$5.00 / hr</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-purple-50 border border-purple-200 text-xs text-purple-900 flex items-center gap-2">
+          <i data-lucide="shield-check" class="w-4 h-4 text-purple-700"></i>
+          <span>Guaranteed reserved bay + 15 min free grace period on arrival.</span>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Total Parking Fee</div>
+            <div class="text-xl font-extrabold text-slate-900" id="parkModalTotalDisplay">$15.00</div>
+          </div>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-600/25 transition">
+            Generate QR Pass
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. CINEMA SEAT BOOKING MODAL -->
+  <div id="cinemaModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-150">
+      <button onclick="closeModal('cinemaModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center">
+          <i data-lucide="clapperboard" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span id="cinemaModalScreen" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800">Audi 1 - IMAX 3D</span>
+          <h3 id="cinemaModalTitle" class="text-base font-extrabold text-slate-900 mt-0.5">Interstellar: Chrono Horizon</h3>
+        </div>
+      </div>
+
+      <!-- Cinema Screen Curvature Graphic -->
+      <div class="my-4 text-center">
+        <div class="w-3/4 mx-auto h-2 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 rounded-full shadow-md shadow-amber-300/40"></div>
+        <div class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-1">Curved IMAX Laser Screen</div>
+      </div>
+
+      <!-- Interactive Seat Matrix -->
+      <div class="p-4 bg-slate-900 rounded-2xl text-white my-3">
+        <div class="grid grid-cols-8 gap-2 justify-center max-w-xs mx-auto" id="cinemaSeatsGrid">
+          <!-- Populated via JS -->
+        </div>
+        <div class="flex items-center justify-center gap-4 text-[10px] text-slate-300 mt-4 pt-3 border-t border-slate-800">
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-700"></span> Available</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-400"></span> Selected</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-800 opacity-40"></span> Reserved</div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+        <div>
+          <div class="text-[10px] text-slate-400 uppercase font-semibold">Selected: <span id="cinemaSelectedCountLabel" class="text-slate-900 font-bold">2 Seats</span></div>
+          <div class="text-xl font-extrabold text-slate-900" id="cinemaTotalPriceLabel">$36.00</div>
+        </div>
+        <button onclick="submitCinemaBooking()" class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/25 transition">
+          Confirm Seats & Ticket
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MALL-TO-HOME DELIVERY MODAL -->
+  <div id="deliveryModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-150">
+      <button onclick="closeModal('deliveryModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center">
+          <i data-lucide="truck" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800">Mall-to-Home</span>
+          <h3 id="delModalStoreName" class="text-base font-extrabold text-slate-900 mt-0.5">Nike Flagship Store</h3>
+        </div>
+      </div>
+
+      <form onsubmit="submitDeliveryOrder(event)" class="space-y-4">
+        <input type="hidden" id="delModalMallId" value="">
+        <input type="hidden" id="delModalStore" value="">
+        <input type="hidden" id="delModalItemName" value="">
+        <input type="hidden" id="delModalPrice" value="">
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-slate-400">Merchandise Item</div>
+            <div class="text-xs font-bold text-slate-900" id="delModalItemTitle">Air Zoom Pegasus 41 Pro</div>
+          </div>
+          <div class="text-sm font-extrabold text-slate-900" id="delModalItemPriceDisplay">$140.00</div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Fulfillment Mode</label>
+          <select id="delModalOption" class="w-full text-xs p-2 rounded-xl border border-slate-200 bg-slate-50">
+            <option value="Express Hyperlocal (Under 2 hrs)">Express Courier to Home (Under 2 hrs) - $4.99</option>
+            <option value="Curbside / Mall Pickup">Click & Collect at Mall Concierge - Free</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Delivery Address</label>
+          <input type="text" id="delModalAddress" required value="Flat 402, Tower Emerald, Horizon Heights" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Total with Fulfillment</div>
+            <div class="text-xl font-extrabold text-slate-900" id="delModalTotalDisplay">$144.99</div>
+          </div>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/25 transition">
+            Place Order
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. QR PASS VIEWER MODAL -->
+  <div id="qrModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-150">
+      <button onclick="closeModal('qrModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <span id="qrModalBadge" class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-100 text-purple-800">
+        Digital Ingress Pass
+      </span>
+
+      <h3 id="qrModalTitle" class="text-base font-extrabold text-slate-900 mt-2">Active Parking Pass</h3>
+      <p id="qrModalSubtitle" class="text-xs text-slate-500 mt-0.5">Slot: B2-E14 | Phoenix Grand Galleria</p>
+
+      <!-- Simulated QR Pattern Graphic -->
+      <div class="my-6 p-4 bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl inline-block shadow-inner">
+        <div class="w-44 h-44 bg-white p-2 rounded-xl border border-slate-200 flex flex-col items-center justify-center">
+          <div class="grid grid-cols-5 gap-1.5 w-full h-full p-2">
+            <!-- Simulated QR Blocks -->
+            <div class="bg-slate-900 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-white"></div><div class="bg-slate-900 rounded-xs"></div>
+            <div class="bg-slate-900 rounded-xs"></div><div class="bg-white"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-white"></div>
+            <div class="bg-slate-900 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-white"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div>
+            <div class="bg-white"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-white"></div><div class="bg-slate-900 rounded-xs"></div>
+            <div class="bg-slate-900 rounded-xs"></div><div class="bg-white"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div>
+          </div>
+        </div>
+        <div class="text-[10px] font-mono font-bold text-slate-600 mt-2 tracking-widest" id="qrModalCodeLabel">NEXUS-PARK-B2-E14</div>
+      </div>
+
+      <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-900 font-medium">
+        Show this QR code at the mall ingress scanner or gate validator.
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. WALLET REWARDS MODAL -->
+  <div id="walletModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-150">
+      <button onclick="closeModal('walletModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-amber-400 text-amber-950 flex items-center justify-center font-black">
+          <i data-lucide="coins" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900">NexusRewards</span>
+          <h3 class="text-base font-extrabold text-slate-900 mt-0.5">Unified Loyalty & Cashback</h3>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-amber-950 shadow-md mb-4">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider">Gold VIP Tier</span>
+          <span class="text-xs font-mono font-bold">● ACTIVE</span>
+        </div>
+        <div class="text-3xl font-black mt-2" id="walletModalPoints">1,250 Points</div>
+        <div class="text-xs font-semibold mt-1">Equivalent to $12.50 Credit across Mall & Utilities</div>
+      </div>
+
+      <h4 class="font-bold text-xs text-slate-800 mb-2">Recent Omnichannel Earnings</h4>
+      <div id="walletTransactionsList" class="space-y-2 mb-4">
+        <!-- Rendered via JS -->
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 text-center">
+        <p class="text-[11px] text-slate-500">Points are automatically credited upon booking home utility services or visiting partner malls.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ================= CLIENT APPLICATION LOGIC ================= -->
+  <script>
+    // State Store
+    let appState = {
+      currentTab: 'overview',
+      selectedMallId: 'mall-1',
+      malls: [],
+      stores: [],
+      movies: [],
+      foodOutlets: [],
+      parkingZones: [],
+      homeServices: [],
+      technicians: [],
+      bookings: [],
+      wallet: {},
+      promotions: [],
+      stats: {},
+      selectedSeats: ['G11', 'G12'],
+      currentBookingMovie: null,
+      currentModalService: null,
+      selectedTierIndex: 0
+    };
+
+    // Initialize App
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadInitialData();
+      lucide.createIcons();
+    });
+
+    async function loadInitialData() {
+      try {
+        const [
+          mallsRes,
+          storesRes,
+          moviesRes,
+          foodRes,
+          parkingRes,
+          servicesRes,
+          techRes,
+          bookingsRes,
+          walletRes,
+          promosRes,
+          statsRes
+        ] = await Promise.all([
+          fetch('/api/malls').then(r => r.json()),
+          fetch('/api/stores').then(r => r.json()),
+          fetch('/api/movies').then(r => r.json()),
+          fetch('/api/food').then(r => r.json()),
+          fetch('/api/parking').then(r => r.json()),
+          fetch('/api/home-services').then(r => r.json()),
+          fetch('/api/technicians').then(r => r.json()),
+          fetch('/api/bookings').then(r => r.json()),
+          fetch('/api/wallet').then(r => r.json()),
+          fetch('/api/promotions').then(r => r.json()),
+          fetch('/api/stats').then(r => r.json())
+        ]);
+
+        appState.malls = mallsRes;
+        appState.stores = storesRes;
+        appState.movies = moviesRes;
+        appState.foodOutlets = foodRes;
+        appState.parkingZones = parkingRes;
+        appState.homeServices = servicesRes;
+        appState.technicians = techRes;
+        appState.bookings = bookingsRes;
+        appState.wallet = walletRes;
+        appState.promotions = promosRes;
+        appState.stats = statsRes;
+
+        renderMallSelector();
+        updateSelectedMallView();
+        renderOverviewPromotions();
+        renderStores();
+        renderParkingZones();
+        renderMovies();
+        renderFoodOutlets();
+        renderHomeServices();
+        renderTechnicians();
+        renderBookings();
+        renderAdminDashboard();
+        updateWalletDisplay();
+        updateActiveBadge();
+
+        lucide.createIcons();
+      } catch (err) {
+        console.error("Error loading initial data:", err);
+        showToast("Error connecting to server", "error");
+      }
+    }
+
+    // Tab Navigation
+    function switchTab(tabId) {
+      appState.currentTab = tabId;
+      const tabs = ['overview', 'mall', 'home', 'tracker', 'admin'];
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (el) el.classList.toggle('hidden', t !== tabId);
+        if (btn) {
+          if (t === tabId) {
+            btn.className = "nav-tab-btn active px-3.5 py-2 rounded-lg transition flex items-center gap-2 text-brand-600 bg-brand-50 border border-brand-200/60 shadow-xs";
+          } else {
+            btn.className = "nav-tab-btn px-3.5 py-2 rounded-lg transition flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100";
+          }
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    // Mall Sub Tab Filtering
+    function filterMallSubTab(subTabId) {
+      const subTabs = ['stores', 'parking', 'cinema', 'food'];
+      subTabs.forEach(st => {
+        const panel = document.getElementById(`mallSubPanel-${st}`);
+        const btn = document.getElementById(`subtab-btn-${st}`);
+        if (panel) panel.classList.toggle('hidden', st !== subTabId);
+        if (btn) {
+          if (st === subTabId) {
+            btn.className = "subtab-btn active px-3.5 py-2 rounded-xl text-brand-700 bg-brand-50 border border-brand-200/70 transition flex items-center gap-1.5";
+          } else {
+            btn.className = "subtab-btn px-3.5 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-1.5";
+          }
+        }
+      });
+      lucide.createIcons();
+    }
+
+    // Mall Selection Handler
+    function renderMallSelector() {
+      const selector = document.getElementById('mallSelector');
+      selector.innerHTML = appState.malls.map(m => `
+        <option value="${m.id}" ${m.id === appState.selectedMallId ? 'selected' : ''}>
+          ${m.name} (${m.city})
+        </option>
+      `).join('');
+    }
+
+    function handleMallChange(mallId) {
+      appState.selectedMallId = mallId;
+      updateSelectedMallView();
+      renderStores();
+      renderParkingZones();
+      renderMovies();
+      renderFoodOutlets();
+      showToast(`Switched mall to ${getCurrentMall().name}`);
+    }
+
+    function getCurrentMall() {
+      return appState.malls.find(m => m.id === appState.selectedMallId) || appState.malls[0];
+    }
+
+    function updateSelectedMallView() {
+      const mall = getCurrentMall();
+      if (!mall) return;
+
+      document.getElementById('overviewSelectedMallName').innerText = mall.name;
+      document.getElementById('mallNameTitle').innerText = mall.name;
+      document.getElementById('mallCityTag').innerText = mall.city;
+      document.getElementById('mallAddressLabel').innerHTML = `<i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-400"></i> <span>${mall.address}</span>`;
+      document.getElementById('mallRatingLabel').innerText = `${mall.rating} (${(mall.reviewsCount/1000).toFixed(1)}k reviews)`;
+      document.getElementById('mallTimingsLabel').innerText = mall.timings;
+      document.getElementById('mallBannerImage').src = mall.image;
+      document.getElementById('mallOccupancyLabel').innerText = `${mall.liveOccupancyPercent}% Capacity`;
+      document.getElementById('mallParkingStatsBadge').innerText = `${mall.parkingAvailable} Open Bays`;
+      document.getElementById('parkingCapacityValue').innerText = `${mall.parkingTotal} Slots`;
+      
+      lucide.createIcons();
+    }
+
+    // Render Promotions in Overview
+    function renderOverviewPromotions() {
+      const container = document.getElementById('overviewPromosGrid');
+      container.innerHTML = appState.promotions.map(p => `
+        <div class="bg-white p-4 rounded-xl border border-amber-200 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded border border-amber-300">
+                ${p.code}
+              </span>
+              <span class="text-xs font-black text-amber-700">${p.discount}</span>
+            </div>
+            <h5 class="font-bold text-xs text-slate-900 mt-2">${p.title}</h5>
+            <p class="text-[11px] text-slate-500 mt-1">${p.description}</p>
+          </div>
+          <button onclick="copyPromo('${p.code}')" class="mt-3 w-full py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1">
+            <i data-lucide="copy" class="w-3 h-3"></i> Copy Code
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function copyPromo(code) {
+      navigator.clipboard.writeText(code);
+      showToast(`Promo code "${code}" copied to clipboard!`);
+    }
+
+    // Render Stores & Products
+    let currentStoreCategory = 'All';
+    function filterStoreCategory(cat) {
+      currentStoreCategory = cat;
+      document.querySelectorAll('.store-filter-btn').forEach(b => {
+        b.classList.toggle('active', b.innerText.includes(cat));
+        if (b.innerText.includes(cat)) {
+          b.className = "store-filter-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white";
+        } else {
+          b.className = "store-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200";
+        }
+      });
+      renderStores();
+    }
+
+    function renderStores() {
+      const container = document.getElementById('storesListGrid');
+      let filtered = appState.stores.filter(s => s.mallId === appState.selectedMallId);
+      if (currentStoreCategory !== 'All') {
+        filtered = filtered.filter(s => s.category.toLowerCase().includes(currentStoreCategory.toLowerCase()));
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-400">
+            <i data-lucide="store" class="w-10 h-10 mx-auto text-slate-300 mb-2"></i>
+            <p class="font-medium text-xs">No stores found in this category for the current mall.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = filtered.map(s => `
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">${s.category}</span>
+              <span class="flex items-center gap-1 text-xs font-bold text-amber-500">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> ${s.rating}
+              </span>
+            </div>
+            <h4 class="font-extrabold text-base text-slate-900 mt-2">${s.name}</h4>
+            <div class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+              <i data-lucide="compass" class="w-3.5 h-3.5 text-slate-400"></i> ${s.floor}
+            </div>
+            <div class="mt-2 text-[11px] font-semibold text-purple-700 bg-purple-50 px-2 py-1 rounded-md border border-purple-100">
+              🏷️ ${s.offer}
+            </div>
+
+            <!-- Product Showcase -->
+            <div class="mt-4 space-y-2 border-t border-slate-100 pt-3">
+              <div class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Catalog Items Available:</div>
+              ${s.products.map(p => `
+                <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                  <div class="flex items-center gap-2">
+                    <img src="${p.image}" alt="${p.name}" class="w-9 h-9 rounded-lg object-cover">
+                    <div>
+                      <div class="font-bold text-xs text-slate-800">${p.name}</div>
+                      <div class="text-[11px] font-semibold text-emerald-600">$${p.price}</div>
+                    </div>
+                  </div>
+                  <button onclick="openDeliveryModal('${s.id}', '${p.id}', '${p.name}', ${p.price})" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[10px] font-bold transition flex items-center gap-1">
+                    <i data-lucide="truck" class="w-3 h-3"></i> Order to Home
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span>Contact: <strong class="text-slate-600">${s.contact}</strong></span>
+            <span class="text-emerald-600 font-semibold flex items-center gap-1">
+              <i data-lucide="zap" class="w-3 h-3"></i> ${s.deliveryTimeHours} delivery
+            </span>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // Render Parking Zones
+    function renderParkingZones() {
+      const container = document.getElementById('parkingZonesGrid');
+      const zones = appState.parkingZones.filter(z => z.mallId === appState.selectedMallId);
+
+      container.innerHTML = zones.map(z => {
+        const available = Math.max(0, z.totalSlots - z.occupiedSlots);
+        const percent = Math.round((z.occupiedSlots / z.totalSlots) * 100);
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${z.hasEvCharging ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-100 text-purple-800'}">
+                  ${z.hasEvCharging ? '⚡ EV Fast Charging Bay' : '🚗 Standard / VIP Bay'}
+                </span>
+                <span class="text-xs font-bold text-slate-700">$${z.hourlyRate.toFixed(2)} / hr</span>
+              </div>
+              <h4 class="font-extrabold text-base text-slate-900 mt-2">${z.zoneName}</h4>
+              
+              <!-- Progress Bar -->
+              <div class="mt-3">
+                <div class="flex items-center justify-between text-xs mb-1">
+                  <span class="font-semibold text-slate-500">Live Bay Occupancy</span>
+                  <span class="font-bold text-slate-800">${z.occupiedSlots} / ${z.totalSlots} slots (${percent}%)</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div class="h-full ${percent > 85 ? 'bg-rose-500' : percent > 60 ? 'bg-amber-500' : 'bg-emerald-500'} transition-all duration-500" style="width: ${percent}%"></div>
+                </div>
+                <div class="text-[11px] font-bold text-emerald-600 mt-1 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${available} Vacant Bays Ready
+                </div>
+              </div>
+
+              <!-- Features checklist -->
+              <div class="mt-4 space-y-1.5 text-xs text-slate-600">
+                ${z.features.map(f => `
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500 shrink-0"></i>
+                    <span>${f}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-xs text-slate-400">Includes QR Ingress Pass</span>
+              <button onclick="openParkingModal('${z.id}', '${z.zoneName}', ${z.hourlyRate})" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold shadow-md shadow-purple-600/20 transition flex items-center gap-1.5">
+                <i data-lucide="ticket" class="w-3.5 h-3.5"></i> Reserve Slot
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    // Render Movies
+    function renderMovies() {
+      const container = document.getElementById('moviesListGrid');
+      const movies = appState.movies.filter(m => m.mallId === appState.selectedMallId);
+
+      container.innerHTML = movies.map(m => `
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between">
+          <div>
+            <div class="relative h-44 bg-slate-900">
+              <img src="${m.poster}" alt="${m.title}" class="w-full h-full object-cover opacity-80">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-3 left-3 bg-amber-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded">
+                IMDb ${m.imdb}
+              </div>
+              <div class="absolute bottom-3 left-3 right-3 text-white">
+                <span class="text-[10px] uppercase font-bold text-slate-300 tracking-wider">${m.genre} • ${m.duration}</span>
+                <h4 class="text-base font-extrabold text-white leading-tight mt-0.5">${m.title}</h4>
+              </div>
+            </div>
+
+            <div class="p-4 space-y-3">
+              <div class="text-[11px] font-bold uppercase text-slate-400">Available Showtimes & Screens</div>
+              <div class="space-y-2">
+                ${m.showtimes.map(st => `
+                  <div onclick="openCinemaModal('${m.id}', '${st.screen}', '${st.time}', ${st.price})" class="p-2.5 rounded-xl border border-slate-200 hover:border-amber-400 hover:bg-amber-50/40 transition cursor-pointer flex items-center justify-between">
+                    <div>
+                      <div class="font-bold text-xs text-slate-800">${st.time}</div>
+                      <div class="text-[10px] text-slate-500">${st.screen}</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-xs font-bold text-amber-700">$${st.price}</div>
+                      <div class="text-[10px] text-emerald-600 font-semibold">${st.availableSeats} seats left</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // Render Food Outlets
+    function renderFoodOutlets() {
+      const container = document.getElementById('foodOutletsGrid');
+      const outlets = appState.foodOutlets.filter(f => f.mallId === appState.selectedMallId);
+
+      container.innerHTML = outlets.map(f => `
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">${f.cuisine}</span>
+              <span class="text-xs font-bold text-amber-500 flex items-center gap-1">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> ${f.rating}
+              </span>
+            </div>
+            <h4 class="font-extrabold text-base text-slate-900 mt-2">${f.name}</h4>
+            <div class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> Stall: ${f.stallNumber} • ${f.court}
+            </div>
+
+            <!-- Menu items -->
+            <div class="mt-4 space-y-2.5">
+              ${f.items.map(it => `
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                  <div class="flex items-center gap-2.5">
+                    <img src="${it.image}" alt="${it.name}" class="w-10 h-10 rounded-lg object-cover">
+                    <div>
+                      <div class="font-bold text-xs text-slate-800">${it.name}</div>
+                      <div class="text-[10px] text-slate-500">${it.dietary} • Ready in ${it.prepTime}</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="text-xs font-bold text-slate-900">$${it.price.toFixed(2)}</span>
+                    <button onclick="orderFoodItem('${f.id}', '${it.id}', '${it.name}', ${it.price})" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+                      <i data-lucide="plus" class="w-3 h-3"></i> Order
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // Render Home Services
+    let currentHomeCategory = 'All';
+    function filterHomeCategory(cat) {
+      currentHomeCategory = cat;
+      document.querySelectorAll('.home-cat-btn').forEach(b => {
+        b.classList.toggle('active', b.innerText.includes(cat));
+        if (b.innerText.includes(cat)) {
+          b.className = "home-cat-btn active px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs";
+        } else {
+          b.className = "home-cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200";
+        }
+      });
+      renderHomeServices();
+    }
+
+    function renderHomeServices() {
+      const container = document.getElementById('homeServicesListGrid');
+      let services = appState.homeServices;
+      if (currentHomeCategory !== 'All') {
+        services = services.filter(s => 
+          s.category.toLowerCase().includes(currentHomeCategory.toLowerCase()) ||
+          s.title.toLowerCase().includes(currentHomeCategory.toLowerCase())
+        );
+      }
+
+      container.innerHTML = services.map(s => `
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${s.badge}</span>
+              <span class="flex items-center gap-1 text-xs font-bold text-amber-500">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i> ${s.rating} (${s.reviewsCount})
+              </span>
+            </div>
+            
+            <h4 class="font-extrabold text-base text-slate-900 mt-2">${s.title}</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">${s.description}</p>
+
+            <!-- Key inclusions -->
+            <div class="mt-4 space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="text-[10px] font-bold uppercase text-slate-400">Key Features:</div>
+              ${s.included.slice(0, 3).map(inc => `
+                <div class="flex items-center gap-1.5">
+                  <i data-lucide="check" class="w-3 h-3 text-emerald-600 shrink-0"></i>
+                  <span>${inc}</span>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Warranty pill -->
+            <div class="mt-3 text-[11px] font-semibold text-emerald-700 flex items-center gap-1">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> ${s.warranty}
+            </div>
+          </div>
+
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] text-slate-400 font-semibold">Starting from</div>
+              <div class="text-lg font-black text-slate-900">$${s.startingPrice}</div>
+            </div>
+            <button onclick="openHomeServiceModal('${s.id}')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Schedule Pro
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // Render Technicians
+    function renderTechnicians() {
+      const container = document.getElementById('techniciansGrid');
+      container.innerHTML = appState.technicians.map(t => `
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center">
+          <img src="${t.avatar}" alt="${t.name}" class="w-16 h-16 rounded-full mx-auto object-cover border-2 border-emerald-500/60 shadow-sm">
+          <h4 class="font-bold text-xs text-slate-900 mt-2">${t.name}</h4>
+          <p class="text-[10px] text-emerald-700 font-semibold">${t.specialty}</p>
+          <div class="flex items-center justify-center gap-1 text-[11px] font-bold text-amber-500 mt-1">
+            <i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> ${t.rating} (${t.jobsCompleted} jobs)
+          </div>
+          <div class="text-[10px] text-slate-500 mt-1 px-2 py-0.5 bg-white rounded-md border border-slate-200 inline-block font-mono">
+            ${t.status}
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // Render Bookings in Unified Live Tracker
+    let currentTrackerFilter = 'all';
+    function filterTrackerType(type) {
+      currentTrackerFilter = type;
+      document.querySelectorAll('.tracker-filter-btn').forEach(b => {
+        b.classList.toggle('active', b.onclick.toString().includes(type));
+        if (b.onclick.toString().includes(type)) {
+          b.className = "tracker-filter-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white";
+        } else {
+          b.className = "tracker-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200";
+        }
+      });
+      renderBookings();
+    }
+
+    function renderBookings() {
+      const container = document.getElementById('bookingsListContainer');
+      let bookings = appState.bookings;
+      if (currentTrackerFilter !== 'all') {
+        bookings = bookings.filter(b => b.type === currentTrackerFilter);
+      }
+
+      document.getElementById('trackerCountBadge').innerText = bookings.length;
+
+      if (bookings.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200">
+            <i data-lucide="inbox" class="w-10 h-10 mx-auto text-slate-300 mb-2"></i>
+            <p class="font-medium text-xs">No active bookings under this filter.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = bookings.map(b => {
+        let badgeColor = 'bg-blue-100 text-blue-800';
+        let iconName = 'clock';
+        let title = b.serviceTitle || b.movieTitle || b.zoneName || b.item || 'Service Order';
+        
+        if (b.type === 'home_service') {
+          badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+          iconName = 'wrench';
+        } else if (b.type === 'mall_parking') {
+          badgeColor = 'bg-purple-100 text-purple-800 border-purple-200';
+          iconName = 'car';
+        } else if (b.type === 'cinema_ticket') {
+          badgeColor = 'bg-amber-100 text-amber-800 border-amber-200';
+          iconName = 'clapperboard';
+        } else if (b.type === 'mall_to_home_delivery') {
+          badgeColor = 'bg-indigo-100 text-indigo-800 border-indigo-200';
+          iconName = 'truck';
+        } else if (b.type === 'food_order') {
+          badgeColor = 'bg-rose-100 text-rose-800 border-rose-200';
+          iconName = 'utensils';
+        }
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center">
+                  <i data-lucide="${iconName}" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${badgeColor}">
+                      ${b.type.replace('_', ' ')}
+                    </span>
+                    <span class="text-xs font-mono font-bold text-slate-500">${b.id}</span>
+                  </div>
+                  <h4 class="font-extrabold text-sm text-slate-900 mt-0.5">${title}</h4>
+                </div>
+              </div>
+
+              <!-- Price & Status Badge -->
+              <div class="flex items-center gap-3 sm:text-right">
+                <div>
+                  <div class="text-sm font-black text-slate-900">$${(b.price || 0).toFixed(2)}</div>
+                  <div class="text-[10px] font-semibold text-slate-400">${b.scheduledDate || b.bookingDate || 'Active'}</div>
+                </div>
+                <div class="px-3 py-1 rounded-full text-xs font-bold ${b.status === 'completed' ? 'bg-slate-100 text-slate-700' : 'bg-emerald-100 text-emerald-800 animate-pulse'}">
+                  ${b.statusLabel || b.status}
+                </div>
+              </div>
+            </div>
+
+            <!-- Details & Progress Stepper -->
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div class="md:col-span-2">
+                ${b.technician ? `
+                  <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
+                    <img src="${b.technician.avatar}" class="w-8 h-8 rounded-full object-cover">
+                    <div>
+                      <span class="font-bold text-slate-800">${b.technician.name}</span>
+                      <span class="text-[10px] text-slate-500 block">Contact: ${b.technician.phone} • Rating: ★ ${b.technician.rating}</span>
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${b.slotCode ? `
+                  <div class="p-2 rounded-xl bg-purple-50 text-purple-900 font-mono text-xs flex items-center justify-between">
+                    <span>Reserved Bay: <strong>${b.slotCode}</strong></span>
+                    <span>Plate: <strong>${b.vehicleNumber}</strong></span>
+                  </div>
+                ` : ''}
+
+                ${b.seats ? `
+                  <div class="p-2 rounded-xl bg-amber-50 text-amber-900 text-xs flex items-center justify-between">
+                    <span>Screen: <strong>${b.screen}</strong></span>
+                    <span>Reserved Seats: <strong>${b.seats.join(', ')}</strong></span>
+                  </div>
+                ` : ''}
+
+                ${b.buzzerToken ? `
+                  <div class="p-2 rounded-xl bg-rose-50 text-rose-900 font-mono text-xs flex items-center justify-between">
+                    <span>Digital Buzzer Token: <strong>${b.buzzerToken}</strong></span>
+                    <span>Counter: <strong>${b.stallNumber}</strong></span>
+                  </div>
+                ` : ''}
+
+                ${b.address ? `
+                  <div class="text-[11px] text-slate-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> Address: ${b.address}
+                  </div>
+                ` : ''}
+              </div>
+
+              <!-- Interactive Action Buttons -->
+              <div class="flex flex-col gap-2 justify-center">
+                ${b.qrData ? `
+                  <button onclick="openQRModal('${title}', '${b.qrData}', '${b.slotCode || (b.seats && b.seats.join(', ')) || b.id}')" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                    <i data-lucide="qr-code" class="w-3.5 h-3.5"></i> View Digital Pass
+                  </button>
+                ` : ''}
+                
+                <button onclick="advanceBookingStatus('${b.id}')" class="w-full py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                  <i data-lucide="play-circle" class="w-3.5 h-3.5"></i> Advance Status (Demo)
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    // Advance Status Helper for Evaluators & Demo
+    async function advanceBookingStatus(bookingId) {
+      const booking = appState.bookings.find(b => b.id === bookingId);
+      if (!booking) return;
+
+      const sequence = ['pending', 'assigned', 'en_route', 'in_progress', 'completed'];
+      let currentIndex = sequence.indexOf(booking.status);
+      let nextStatus = sequence[(currentIndex + 1) % sequence.length];
+
+      try {
+        const res = await fetch(`/api/bookings/${bookingId}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: nextStatus })
+        });
+        const updated = await res.json();
+        
+        // Update local state
+        const idx = appState.bookings.findIndex(b => b.id === bookingId);
+        if (idx !== -1) appState.bookings[idx] = updated;
+
+        renderBookings();
+        renderAdminDashboard();
+        updateActiveBadge();
+
+        showToast(`Status updated to: ${updated.statusLabel}`);
+      } catch (err) {
+        showToast('Error updating status', 'error');
+      }
+    }
+
+    // Render Admin Portal
+    function renderAdminDashboard() {
+      const tbody = document.getElementById('adminTicketsTableBody');
+      tbody.innerHTML = appState.bookings.slice(0, 6).map(b => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-2.5 px-3 font-mono font-bold text-slate-800">${b.id}</td>
+          <td class="py-2.5 px-3 uppercase text-[10px] font-semibold text-slate-500">${b.type.replace('_', ' ')}</td>
+          <td class="py-2.5 px-3 text-slate-700">${b.serviceTitle || b.movieTitle || b.zoneName || b.item}</td>
+          <td class="py-2.5 px-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-800">
+              ${b.statusLabel || b.status}
+            </span>
+          </td>
+          <td class="py-2.5 px-3 text-right">
+            <button onclick="advanceBookingStatus('${b.id}')" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-white font-bold text-[10px]">
+              Next Step
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Render Admin Parking Controls
+      const parkCtrl = document.getElementById('adminParkingControls');
+      parkCtrl.innerHTML = appState.parkingZones.slice(0, 3).map(z => `
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+          <div>
+            <div class="font-bold text-slate-800">${z.zoneName}</div>
+            <div class="text-[10px] text-slate-500">${z.occupiedSlots} / ${z.totalSlots} Slots In Use</div>
+          </div>
+          <button onclick="simulateParkingRush('${z.id}')" class="px-2.5 py-1 bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold rounded-lg text-[10px]">
+            Simulate Rush (+5)
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function simulateParkingRush(zoneId) {
+      const z = appState.parkingZones.find(pz => pz.id === zoneId);
+      if (z) {
+        z.occupiedSlots = Math.min(z.totalSlots, z.occupiedSlots + 5);
+        renderParkingZones();
+        renderAdminDashboard();
+        showToast(`Simulated traffic influx at ${z.zoneName}`);
+      }
+    }
+
+    // Wallet Modal
+    function openWalletModal() {
+      const modal = document.getElementById('walletModal');
+      document.getElementById('walletModalPoints').innerText = `${appState.wallet.pointsBalance} Points`;
+      
+      const txContainer = document.getElementById('walletTransactionsList');
+      txContainer.innerHTML = appState.wallet.transactions.map(t => `
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+          <span class="text-slate-700">${t.desc}</span>
+          <span class="font-mono font-bold ${t.amount.startsWith('+') ? 'text-emerald-600' : 'text-slate-900'}">${t.amount}</span>
+        </div>
+      `).join('');
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function updateWalletDisplay() {
+      document.getElementById('walletPointsDisplay').innerText = `${appState.wallet.pointsBalance} pts ($${(appState.wallet.pointsBalance/100).toFixed(2)})`;
+    }
+
+    function updateActiveBadge() {
+      const activeCount = appState.bookings.filter(b => b.status !== 'completed' && b.status !== 'cancelled').length;
+      document.getElementById('activeBookingsBadge').innerText = activeCount;
+    }
+
+    // Modal Generic Close
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    }
+
+    // Home Service Modal Setup
+    function openHomeServiceModal(serviceId, isEmergency = false) {
+      const service = appState.homeServices.find(s => s.id === serviceId) || appState.homeServices[0];
+      appState.currentModalService = service;
+      appState.selectedTierIndex = 0;
+
+      document.getElementById('hsmServiceId').value = service.id;
+      document.getElementById('hsmTitle').innerText = service.title;
+      document.getElementById('hsmBadge').innerText = service.warranty;
+      document.getElementById('hsmDesc').innerText = service.description;
+      document.getElementById('hsmUrgentToggle').checked = isEmergency;
+
+      const tiersContainer = document.getElementById('hsmTiersContainer');
+      tiersContainer.innerHTML = service.pricingTiers.map((tier, idx) => `
+        <label class="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 cursor-pointer bg-slate-50">
+          <div class="flex items-center gap-2">
+            <input type="radio" name="hsmTier" value="${idx}" ${idx === 0 ? 'checked' : ''} onchange="updateServiceModalPrice(${idx})" class="text-emerald-600 focus:ring-emerald-500">
+            <div>
+              <div class="font-bold text-xs text-slate-800">${tier.name}</div>
+              <div class="text-[10px] text-slate-500">Est. Time: ${tier.time}</div>
+            </div>
+          </div>
+          <span class="text-xs font-black text-slate-900">$${tier.price}</span>
+        </label>
+      `).join('');
+
+      updateServiceModalPrice(0);
+      document.getElementById('homeServiceModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function updateServiceModalPrice(tierIndex) {
+      appState.selectedTierIndex = tierIndex;
+      const tier = appState.currentModalService.pricingTiers[tierIndex];
+      document.getElementById('hsmFinalPriceDisplay').innerText = `$${tier.price.toFixed(2)}`;
+    }
+
+    function applyServicePromo() {
+      const code = document.getElementById('hsmPromoCode').value.trim().toUpperCase();
+      const feedback = document.getElementById('hsmPromoFeedback');
+      if (code === 'NEXUSNEW') {
+        feedback.innerText = "✓ Valid Promo! $15 discount applied to booking.";
+        feedback.className = "text-[11px] font-semibold text-emerald-600 block";
+        const tier = appState.currentModalService.pricingTiers[appState.selectedTierIndex];
+        const discounted = Math.max(10, tier.price - 15);
+        document.getElementById('hsmFinalPriceDisplay').innerText = `$${discounted.toFixed(2)}`;
+      } else {
+        feedback.innerText = "Invalid code. Try using NEXUSNEW";
+        feedback.className = "text-[11px] font-semibold text-rose-500 block";
+      }
+    }
+
+    async function submitHomeServiceBooking(e) {
+      e.preventDefault();
+      const service = appState.currentModalService;
+      const tier = service.pricingTiers[appState.selectedTierIndex];
+      const isUrgent = document.getElementById('hsmUrgentToggle').checked;
+      const address = document.getElementById('hsmAddress').value;
+      const date = document.getElementById('hsmDate').value;
+      const time = document.getElementById('hsmTime').value;
+
+      try {
+        const res = await fetch('/api/home-services/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            serviceId: service.id,
+            tierName: tier.name,
+            price: tier.price,
+            scheduledDate: date,
+            scheduledTime: isUrgent ? "Immediate (Under 45 mins)" : time,
+            urgent: isUrgent,
+            address: address
+          })
+        });
+
+        const newBooking = await res.json();
+        appState.bookings.unshift(newBooking);
+        appState.wallet.pointsBalance += 50;
+
+        closeModal('homeServiceModal');
+        switchTab('tracker');
+        renderBookings();
+        updateWalletDisplay();
+        updateActiveBadge();
+
+        showToast(`Booked: ${service.title} with verified pro!`);
+      } catch (err) {
+        showToast('Error booking service', 'error');
+      }
+    }
+
+    // Parking Modal Setup
+    function openParkingModal(zoneId, zoneName, hourlyRate) {
+      document.getElementById('parkModalZoneId').value = zoneId;
+      document.getElementById('parkModalZoneName').innerText = zoneName;
+      document.getElementById('parkModalRateDisplay').innerText = `$${hourlyRate.toFixed(2)} / hr`;
+      document.getElementById('parkingModal').classList.remove('hidden');
+      calculateParkingModalPrice();
+      lucide.createIcons();
+    }
+
+    function calculateParkingModalPrice() {
+      const rateText = document.getElementById('parkModalRateDisplay').innerText;
+      const rate = parseFloat(rateText.replace(/[^0-9.]/g, '')) || 4.0;
+      const hours = parseInt(document.getElementById('parkModalDuration').value);
+      const total = rate * hours;
+      document.getElementById('parkModalTotalDisplay').innerText = `$${total.toFixed(2)}`;
+    }
+
+    async function submitParkingReservation(e) {
+      e.preventDefault();
+      const zoneId = document.getElementById('parkModalZoneId').value;
+      const vehicleNumber = document.getElementById('parkModalVehicleNumber').value;
+      const durationHours = parseInt(document.getElementById('parkModalDuration').value);
+
+      try {
+        const res = await fetch('/api/parking/reserve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ zoneId, vehicleNumber, durationHours })
+        });
+        const booking = await res.json();
+        appState.bookings.unshift(booking);
+
+        // Update parking stats
+        const zone = appState.parkingZones.find(z => z.id === zoneId);
+        if (zone) zone.occupiedSlots++;
+
+        closeModal('parkingModal');
+        renderParkingZones();
+        switchTab('tracker');
+        renderBookings();
+        updateActiveBadge();
+
+        showToast(`Parking pass reserved! Slot: ${booking.slotCode}`);
+      } catch (err) {
+        showToast('Error reserving parking bay', 'error');
+      }
+    }
+
+    // Cinema Modal Setup
+    function openCinemaModal(movieId, screen, time, price) {
+      const movie = appState.movies.find(m => m.id === movieId);
+      appState.currentBookingMovie = { movie, screen, time, price };
+
+      document.getElementById('cinemaModalTitle').innerText = movie.title;
+      document.getElementById('cinemaModalScreen').innerText = screen;
+      
+      // Render seat matrix
+      const seatGrid = document.getElementById('cinemaSeatsGrid');
+      const rows = ['F', 'G'];
+      let html = '';
+      rows.forEach(r => {
+        for (let i = 11; i <= 14; i++) {
+          const seatCode = `${r}${i}`;
+          const isSelected = appState.selectedSeats.includes(seatCode);
+          html += `
+            <button onclick="toggleSeat('${seatCode}')" class="cinema-seat text-[10px] font-bold ${isSelected ? 'bg-amber-400 text-slate-950 font-black' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+              ${seatCode}
+            </button>
+          `;
+        }
+      });
+      seatGrid.innerHTML = html;
+      updateCinemaPriceSummary();
+
+      document.getElementById('cinemaModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function toggleSeat(seatCode) {
+      if (appState.selectedSeats.includes(seatCode)) {
+        appState.selectedSeats = appState.selectedSeats.filter(s => s !== seatCode);
+      } else {
+        appState.selectedSeats.push(seatCode);
+      }
+      openCinemaModal(appState.currentBookingMovie.movie.id, appState.currentBookingMovie.screen, appState.currentBookingMovie.time, appState.currentBookingMovie.price);
+    }
+
+    function updateCinemaPriceSummary() {
+      const count = appState.selectedSeats.length;
+      const price = appState.currentBookingMovie ? appState.currentBookingMovie.price : 18;
+      document.getElementById('cinemaSelectedCountLabel').innerText = `${count} Seats (${appState.selectedSeats.join(', ')})`;
+      document.getElementById('cinemaTotalPriceLabel').innerText = `$${(count * price).toFixed(2)}`;
+    }
+
+    async function submitCinemaBooking() {
+      if (appState.selectedSeats.length === 0) {
+        showToast('Please select at least 1 seat', 'error');
+        return;
+      }
+      try {
+        const { movie, screen, time, price } = appState.currentBookingMovie;
+        const res = await fetch('/api/movies/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            movieId: movie.id,
+            screen,
+            showtime: time,
+            seats: appState.selectedSeats,
+            price
+          })
+        });
+        const booking = await res.json();
+        appState.bookings.unshift(booking);
+
+        closeModal('cinemaModal');
+        switchTab('tracker');
+        renderBookings();
+        updateActiveBadge();
+
+        showToast(`IMAX Tickets confirmed for ${movie.title}!`);
+      } catch (err) {
+        showToast('Error booking cinema ticket', 'error');
+      }
+    }
+
+    // Food Order
+    async function orderFoodItem(outletId, itemId, itemName, price) {
+      try {
+        const res = await fetch('/api/food/order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            outletId,
+            items: [{ name: itemName, qty: 1, price }],
+            totalPrice: price
+          })
+        });
+        const order = await res.json();
+        appState.bookings.unshift(order);
+
+        switchTab('tracker');
+        renderBookings();
+        updateActiveBadge();
+
+        showToast(`Order placed at food court! Token: ${order.buzzerToken}`);
+      } catch (err) {
+        showToast('Error placing food order', 'error');
+      }
+    }
+
+    // Mall-to-Home Delivery Setup
+    function openDeliveryModal(storeId, productId, productName, price) {
+      const store = appState.stores.find(s => s.id === storeId);
+      document.getElementById('delModalMallId').value = store.mallId;
+      document.getElementById('delModalStore').value = store.name;
+      document.getElementById('delModalItemName').value = productName;
+      document.getElementById('delModalPrice').value = price;
+      
+      document.getElementById('delModalStoreName').innerText = store.name;
+      document.getElementById('delModalItemTitle').innerText = productName;
+      document.getElementById('delModalItemPriceDisplay').innerText = `$${price.toFixed(2)}`;
+      document.getElementById('delModalTotalDisplay').innerText = `$${(price + 4.99).toFixed(2)}`;
+
+      document.getElementById('deliveryModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    async function submitDeliveryOrder(e) {
+      e.preventDefault();
+      const mallId = document.getElementById('delModalMallId').value;
+      const storeName = document.getElementById('delModalStore').value;
+      const itemName = document.getElementById('delModalItemName').value;
+      const itemPrice = parseFloat(document.getElementById('delModalPrice').value);
+      const deliveryOption = document.getElementById('delModalOption').value;
+      const address = document.getElementById('delModalAddress').value;
+
+      try {
+        const res = await fetch('/api/mall-delivery', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mallId,
+            storeName,
+            itemName,
+            itemPrice,
+            deliveryOption,
+            address
+          })
+        });
+        const order = await res.json();
+        appState.bookings.unshift(order);
+
+        closeModal('deliveryModal');
+        switchTab('tracker');
+        renderBookings();
+        updateActiveBadge();
+
+        showToast(`Delivery order dispatched from ${storeName}!`);
+      } catch (err) {
+        showToast('Error ordering delivery', 'error');
+      }
+    }
+
+    // QR Code Viewer
+    function openQRModal(title, qrData, codeLabel) {
+      document.getElementById('qrModalTitle').innerText = title;
+      document.getElementById('qrModalCodeLabel').innerText = codeLabel || qrData;
+      document.getElementById('qrModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    // Global Omnichannel Search
+    function handleGlobalSearch(query) {
+      const q = query.trim().toLowerCase();
+      const section = document.getElementById('searchResultsSection');
+      const grid = document.getElementById('searchResultsGrid');
+      const clearBtn = document.getElementById('clearSearchBtn');
+
+      if (!q) {
+        section.classList.add('hidden');
+        clearBtn.classList.add('hidden');
+        return;
+      }
+
+      clearBtn.classList.remove('hidden');
+      section.classList.remove('hidden');
+      document.getElementById('searchKeywordLabel').innerText = query;
+
+      // Search across stores, movies, home services
+      const matchingStores = appState.stores.filter(s => s.name.toLowerCase().includes(q) || s.category.toLowerCase().includes(q));
+      const matchingServices = appState.homeServices.filter(s => s.title.toLowerCase().includes(q) || s.category.toLowerCase().includes(q));
+      const matchingMovies = appState.movies.filter(m => m.title.toLowerCase().includes(q) || m.genre.toLowerCase().includes(q));
+
+      let html = '';
+
+      matchingServices.forEach(s => {
+        html += `
+          <div onclick="openHomeServiceModal('${s.id}')" class="p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-200 cursor-pointer hover:bg-emerald-100/60 transition">
+            <span class="text-[10px] font-bold uppercase bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded">Home Service</span>
+            <div class="font-bold text-xs text-slate-900 mt-1">${s.title}</div>
+            <div class="text-[11px] text-emerald-700 font-semibold mt-0.5">From $${s.startingPrice} • Instant Dispatch</div>
+          </div>
+        `;
+      });
+
+      matchingStores.forEach(s => {
+        html += `
+          <div onclick="switchTab('mall'); filterMallSubTab('stores')" class="p-3.5 bg-purple-50/60 rounded-xl border border-purple-200 cursor-pointer hover:bg-purple-100/60 transition">
+            <span class="text-[10px] font-bold uppercase bg-purple-200 text-purple-800 px-2 py-0.5 rounded">Mall Store</span>
+            <div class="font-bold text-xs text-slate-900 mt-1">${s.name} (${s.category})</div>
+            <div class="text-[11px] text-purple-700 font-semibold mt-0.5">Floor: ${s.floor} • 2-hr Delivery</div>
+          </div>
+        `;
+      });
+
+      matchingMovies.forEach(m => {
+        html += `
+          <div onclick="switchTab('mall'); filterMallSubTab('cinema')" class="p-3.5 bg-amber-50/60 rounded-xl border border-amber-200 cursor-pointer hover:bg-amber-100/60 transition">
+            <span class="text-[10px] font-bold uppercase bg-amber-200 text-amber-800 px-2 py-0.5 rounded">Multiplex Cinema</span>
+            <div class="font-bold text-xs text-slate-900 mt-1">${m.title}</div>
+            <div class="text-[11px] text-amber-700 font-semibold mt-0.5">IMDb ${m.imdb} • IMAX Tickets</div>
+          </div>
+        `;
+      });
+
+      if (!html) {
+        html = `<div class="col-span-full text-center text-xs text-slate-400 py-6">No matching stores, services, or movies found.</div>`;
+      }
+
+      grid.innerHTML = html;
+      lucide.createIcons();
+    }
+
+    function clearGlobalSearch() {
+      document.getElementById('globalSearchInput').value = '';
+      document.getElementById('searchResultsSection').classList.add('hidden');
+      document.getElementById('clearSearchBtn').classList.add('hidden');
+    }
+
+    // Reset Demo Data
+    async function resetData() {
+      await fetch('/api/reset', { method: 'POST' });
+      await loadInitialData();
+      showToast('Database reset to clean demo state.');
+    }
+
+    // Toast Notification Utility
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `p-3.5 px-4 rounded-xl shadow-lg border text-xs font-bold text-white flex items-center gap-2 transform transition-all duration-300 translate-y-2 pointer-events-auto ${
+        type === 'error' ? 'bg-rose-600 border-rose-500' : 'bg-slate-900 border-slate-700'
+      }`;
+      toast.innerHTML = `<i data-lucide="${type === 'error' ? 'alert-circle' : 'check'}" class="w-4 h-4"></i> <span>${message}</span>`;
+      container.appendChild(toast);
+      lucide.createIcons();
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
